@@ -1,6 +1,7 @@
+import { Message } from 'element-ui';
 export default {
   showMessage: (type, message) => {
-    this.$message({
+    Message({
       message,
       type,
     });

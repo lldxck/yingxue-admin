@@ -2,13 +2,13 @@ import axios from "axios";
 import router from "router";
 import utils from "utils/utils";
 import status from "@/constants/status";
-import statusCode from "@/constants/statusCode";
 
 export default function request(config) {
   const instance = axios.create({
-    baseUrl: "",
+    baseURL: "http://192.168.1.103:9999/admins/",
     timeout: 15000,
   });
+  instance.defaults.headers["Content-Type"] = "application/json";
 
   // 请求拦截器
   instance.interceptors.request.use(
@@ -23,7 +23,7 @@ export default function request(config) {
   // 响应拦截器
   instance.interceptors.response.use(
     (response) => {
-      return response;
+      return response.data;
     },
     (err) => {
       if (err.response) {

@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { tokens } from "services/login";
 export default {
   name: "login",
   data() {
@@ -43,7 +44,15 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push({ path: "/index" });
+      tokens(this.loginForm).then((res) => {
+        console.log(res);
+        if (res.code == this.$statusCode.SUCCESS) {
+          localStorage.setItem("loginInfo", JSON.stringify(res.data));
+          this.$router.push({ path: "/index" });
+        } else {
+          this.$utils.showMessage(this.$status.ERROR, res.message);
+        }
+      });
     },
   },
 };

@@ -9,26 +9,25 @@
         text-color="#fff"
         active-text-color="#ffd04b"
       >
-        <el-menu-item index="1">
-          <i class="el-icon-menu"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
-        <el-menu-item index="2">
-          <i class="el-icon-document"></i>
-          <span slot="title">分类</span>
-        </el-menu-item>
-        <el-menu-item index="3">
-          <i class="el-icon-setting"></i>
-          <span slot="title">用户</span>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <i class="el-icon-setting"></i>
-          <span slot="title">视频</span>
-        </el-menu-item>
+        <router-link
+          :to="item.path"
+          v-for="item in menuRoutes"
+          :key="item.path"
+          active-class="router-link-active"
+        >
+          <el-menu-item
+            :index="cItem.meta.title"
+            v-for="cItem in item.children"
+            :key="cItem.meta.title"
+          >
+            <i class="el-icon-menu"></i>
+            <span slot="title">{{ cItem.meta.title }}</span>
+          </el-menu-item>
+        </router-link>
       </el-menu>
       <el-container>
         <el-header class="layout-header">
-          <div>
+          <div class="header-left">
             <el-button
               icon="el-icon-s-unfold"
               v-if="isCollapse"
@@ -39,6 +38,15 @@
               v-else
               @click="handleCollapse"
             ></el-button>
+            <!-- 面包屑 -->
+            <el-breadcrumb separator="/" class="breadcrumb-container">
+              <el-breadcrumb-item :to="isCurrentRoute ? { path: '/index' } : ''"
+                >首页</el-breadcrumb-item
+              >
+              <el-breadcrumb-item v-if="isCurrentRoute">{{
+                isCurrentRoute.meta.title
+              }}</el-breadcrumb-item>
+            </el-breadcrumb>
           </div>
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link">
@@ -62,13 +70,31 @@
 
 <script>
 import { loginOut } from "services/login";
+import { routes } from "router";
 export default {
   name: "layout",
   data() {
     return {
       isCollapse: false,
-      defaultActive: "1",
+      defaultActive: "首页",
+      isCurrentRoute: null,
     };
+  },
+  computed: {
+    menuRoutes() {
+      console.log(routes);
+      console.log(routes.filter((item) => item.children));
+      return routes.filter((item) => item.children);
+    },
+  },
+  watch: {
+    $route() {
+      if (this.$route.meta.title != "首页") {
+        this.isCurrentRoute = this.$route;
+      } else {
+        this.isCurrentRoute = null;
+      }
+    },
   },
   methods: {
     handleCollapse() {

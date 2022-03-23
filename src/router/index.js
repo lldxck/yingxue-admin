@@ -6,8 +6,11 @@ Vue.use(VueRouter);
 const Login = () => import("views/Login");
 const Layout = () => import("views/Layout");
 const Home = () => import("views/Home");
+const Category = () => import("views/Category");
+const User = () => import("views/User");
+const Video = () => import("views/Video");
 
-const routes = [
+export const routes = [
   {
     path: "/",
     redirect: "/login",
@@ -26,6 +29,54 @@ const routes = [
         path: "/index",
         name: "home",
         component: Home,
+        meta: {
+          title: "首页",
+        },
+      },
+    ],
+  },
+  {
+    path: "/category",
+    redirect: "/category",
+    component: Layout,
+    children: [
+      {
+        path: "/category",
+        name: "category",
+        component: Category,
+        meta: {
+          title: "分类",
+        },
+      },
+    ],
+  },
+  {
+    path: "/user",
+    redirect: "/user",
+    component: Layout,
+    children: [
+      {
+        path: "/user",
+        name: "user",
+        component: User,
+        meta: {
+          title: "用户",
+        },
+      },
+    ],
+  },
+  {
+    path: "/video",
+    redirect: "/video",
+    component: Layout,
+    children: [
+      {
+        path: "/video",
+        name: "video",
+        component: Video,
+        meta: {
+          title: "视频",
+        },
       },
     ],
   },

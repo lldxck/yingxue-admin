@@ -31,6 +31,7 @@ export const routes = [
         component: Home,
         meta: {
           title: "首页",
+          icon: 'el-icon-s-home',
         },
       },
     ],
@@ -46,6 +47,7 @@ export const routes = [
         component: Category,
         meta: {
           title: "分类",
+          icon:'el-icon-s-grid'
         },
       },
     ],
@@ -61,6 +63,7 @@ export const routes = [
         component: User,
         meta: {
           title: "用户",
+          icon:'el-icon-user'
         },
       },
     ],
@@ -76,6 +79,7 @@ export const routes = [
         component: Video,
         meta: {
           title: "视频",
+          icon:'el-icon-video-camera'
         },
       },
     ],

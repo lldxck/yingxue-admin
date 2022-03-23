@@ -20,7 +20,7 @@
             v-for="cItem in item.children"
             :key="cItem.meta.title"
           >
-            <i class="el-icon-menu"></i>
+            <i :class="cItem.meta.icon"></i>
             <span slot="title">{{ cItem.meta.title }}</span>
           </el-menu-item>
         </router-link>
@@ -82,13 +82,20 @@ export default {
   },
   computed: {
     menuRoutes() {
-      console.log(routes);
-      console.log(routes.filter((item) => item.children));
       return routes.filter((item) => item.children);
     },
   },
+  mounted() {
+    this.defaultActive = this.$route.meta.title;
+    if (this.$route.meta.title != "首页") {
+      this.isCurrentRoute = this.$route;
+    } else {
+      this.isCurrentRoute = null;
+    }
+  },
   watch: {
     $route() {
+      this.defaultActive = this.$route.meta.title;
       if (this.$route.meta.title != "首页") {
         this.isCurrentRoute = this.$route;
       } else {

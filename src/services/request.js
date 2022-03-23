@@ -13,6 +13,10 @@ export default function request(config) {
   // 请求拦截器
   instance.interceptors.request.use(
     (config) => {
+      const loginInfo = JSON.parse(localStorage.getItem('loginInfo'))
+      if (loginInfo) {
+        config.headers['Authorization'] = loginInfo.token
+      }
       return config;
     },
     (err) => {

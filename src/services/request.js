@@ -5,6 +5,7 @@ import status from "@/constants/status";
 
 export default function request(config) {
   const instance = axios.create({
+    // baseURL: "http://192.168.1.103:9999/admins/",
     baseURL: "http://192.168.1.103:9999/admins/",
     timeout: 15000,
   });

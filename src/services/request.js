@@ -6,7 +6,7 @@ import status from "@/constants/status";
 export default function request(config) {
   const instance = axios.create({
     // baseURL: "http://192.168.1.103:9999/admins/",
-    baseURL: "http://192.168.1.103:9999/admins/",
+    baseURL: "http://39.108.191.93:8888/admins/",
     timeout: 15000,
   });
   instance.defaults.headers["Content-Type"] = "application/json";
@@ -14,9 +14,9 @@ export default function request(config) {
   // 请求拦截器
   instance.interceptors.request.use(
     (config) => {
-      const loginInfo = JSON.parse(localStorage.getItem('loginInfo'))
+      const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
       if (loginInfo) {
-        config.headers['Authorization'] = loginInfo.token
+        config.headers["Authorization"] = loginInfo.token;
       }
       return config;
     },

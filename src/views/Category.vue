@@ -5,14 +5,37 @@
         >添加</el-button
       >
     </div>
-    <el-dialog title="添加" :visible.sync="categoryDialog">
+    <el-table
+      :data="data"
+      style="width: 100%; margin-bottom: 20px"
+      row-key="id"
+      border
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+    >
+      <el-table-column prop="name" label="名称" width="300px">
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-dialog :title="title" :visible.sync="categoryDialog">
       <el-form :model="category">
         <el-form-item label="名称" :label-width="formLabelWidth">
           <el-input v-model="category.name" placeholder="请输入名称"></el-input>
         </el-form-item>
         <el-form-item label="父级分类" :label-width="formLabelWidth">
           <el-select
-            v-model="category.parent_id"
+            v-model="category.parentId"
             placeholder="请选择父级分类，不选时为根分类"
           >
             <el-option
@@ -40,17 +63,54 @@ export default {
     return {
       categoryDialog: false,
       formLabelWidth: "100px",
+      data: [],
       categoryOneData: [],
       category: {
         name: "",
-        parent_id: "",
+        // parent_id: "",
+        parentId: "",
       },
     };
   },
+  computed: {
+    title() {
+      return this.category.id ? "修改" : "添加";
+    },
+  },
   mounted() {
+    this.list();
     this.categoryOne();
   },
   methods: {
+    list() {
+      const res = {
+        code: 200,
+        message: null,
+        data: [],
+      };
+      if (res.code == this.$statusCode.SUCCESS) {
+        // 转换tree数据
+        this.data = this.toTree(res.data);
+        console.log(this.data);
+      } else {
+        this.$utils.showMessage(this.$status.ERROR, res.message);
+      }
+    },
+    toTree(data) {
+      // 筛选一级数据
+      const list = data.filter((item) => item.parentId == null);
+      list.map((item) => {
+        item.children = this.findChildren(item, data);
+      });
+      return list;
+    },
+    findChildren(cItem, data) {
+      const list = data.filter((item) => item.parentId == cItem.id);
+      list.map((item) => {
+        item.children = this.findChildren(item, data);
+      });
+      return list;
+    },
     categoryOne() {
       categoryOne().then((res) => {
         if (res.code == this.$statusCode.SUCCESS) {
@@ -68,7 +128,9 @@ export default {
       this.categoryOne();
       this.categoryDialog = true;
     },
-    cancel() {},
+    cancel() {
+      this.categoryDialog = false;
+    },
     submit() {
       const params = {};
       params.name = this.category.name;
@@ -83,6 +145,14 @@ export default {
           this.$utils.showMessage(this.$status.ERROR, res.message);
         }
       });
+    },
+    handleEdit(index, row) {
+      console.log(index, row);
+      this.category = row;
+      this.categoryDialog = true;
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
     },
   },
 };

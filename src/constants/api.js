@@ -5,5 +5,7 @@ export default {
   VIDEOS_API: '/videos',
   CATEGORY_API: '/categories',
   CATEGORY_ADD_API: '/categories',
+  CATEGORY_UPDATE_API: '/categories',
   CATEGORY_ONE_API: '/oneCategories',
+  CATEGORY_DELETE_API: '/categories/',
 };

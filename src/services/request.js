@@ -5,8 +5,8 @@ import status from "@/constants/status";
 
 export default function request(config) {
   const instance = axios.create({
-    // baseURL: "http://192.168.1.103:9999/admins/",
-    baseURL: "http://39.108.191.93:8888/admins/",
+    baseURL: "http://192.168.1.103:9999/admins/",
+    // baseURL: "http://39.108.191.93:8888/admins/",
     timeout: 15000,
   });
   instance.defaults.headers["Content-Type"] = "application/json";

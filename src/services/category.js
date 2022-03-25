@@ -36,3 +36,29 @@ export function categoryOne() {
     method: method.GET,
   })
 }
+
+/**
+ * 删除分类
+ * @param {*} id 
+ * @returns 
+ */
+export function delCategory(id) {
+  return request({
+    url: api.CATEGORY_DELETE_API + id,
+    method: method.DELETE,
+  })
+}
+
+/**
+ * 修改分类
+ * @param {*} id 
+ * @param {*} params 
+ * @returns 
+ */
+export function updateCategory(params) {
+  return request({
+    url: api.CATEGORY_UPDATE_API,
+    method: method.POST,
+    data: params
+  })
+}

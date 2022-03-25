@@ -56,7 +56,13 @@
 </template>
 
 <script>
-import { categoryAdd, categoryOne } from "services/category";
+import {
+  categoryAdd,
+  categoryOne,
+  categorys,
+  delCategory,
+  updateCategory,
+} from "services/category";
 export default {
   name: "category",
   data() {
@@ -67,7 +73,6 @@ export default {
       categoryOneData: [],
       category: {
         name: "",
-        // parent_id: "",
         parentId: "",
       },
     };
@@ -83,18 +88,15 @@ export default {
   },
   methods: {
     list() {
-      const res = {
-        code: 200,
-        message: null,
-        data: [],
-      };
-      if (res.code == this.$statusCode.SUCCESS) {
-        // 转换tree数据
-        this.data = this.toTree(res.data);
-        console.log(this.data);
-      } else {
-        this.$utils.showMessage(this.$status.ERROR, res.message);
-      }
+      categorys().then((res) => {
+        if (res.code == this.$statusCode.SUCCESS) {
+          // 转换tree数据
+          this.data = this.toTree(res.data);
+          console.log(this.data);
+        } else {
+          this.$utils.showMessage(this.$status.ERROR, res.message);
+        }
+      });
     },
     toTree(data) {
       // 筛选一级数据
@@ -123,7 +125,7 @@ export default {
     add() {
       this.category = {
         name: "",
-        parent_id: "",
+        parentId: "",
       };
       this.categoryOne();
       this.categoryDialog = true;
@@ -134,17 +136,31 @@ export default {
     submit() {
       const params = {};
       params.name = this.category.name;
-      if (this.category.parent_id) {
-        params.parent_id = this.category.parent_id;
+      if (this.category.parentId) {
+        params.parentId = this.category.parentId;
       }
-      categoryAdd(JSON.stringify(params)).then((res) => {
-        if (res.code == this.$statusCode.SUCCESS) {
-          this.$utils.showMessage(this.$status.SUCCESS, res.message);
-          this.categoryDialog = false;
-        } else {
-          this.$utils.showMessage(this.$status.ERROR, res.message);
-        }
-      });
+      if (this.category.id) {
+        params.id = this.category.id;
+        updateCategory(JSON.stringify(params)).then((res) => {
+          if (res.code == this.$statusCode.SUCCESS) {
+            this.$utils.showMessage(this.$status.SUCCESS, res.message);
+            this.categoryDialog = false;
+            this.list();
+          } else {
+            this.$utils.showMessage(this.$status.ERROR, res.message);
+          }
+        });
+      } else {
+        categoryAdd(JSON.stringify(params)).then((res) => {
+          if (res.code == this.$statusCode.SUCCESS) {
+            this.$utils.showMessage(this.$status.SUCCESS, res.message);
+            this.categoryDialog = false;
+            this.list();
+          } else {
+            this.$utils.showMessage(this.$status.ERROR, res.message);
+          }
+        });
+      }
     },
     handleEdit(index, row) {
       console.log(index, row);
@@ -153,6 +169,14 @@ export default {
     },
     handleDelete(index, row) {
       console.log(index, row);
+      delCategory(row.id).then((res) => {
+        if (res.code == this.$statusCode.SUCCESS) {
+          this.$utils.showMessage(this.$status.SUCCESS, res.message);
+          this.list();
+        } else {
+          this.$utils.showMessage(this.$status.ERROR, res.message);
+        }
+      });
     },
   },
 };
